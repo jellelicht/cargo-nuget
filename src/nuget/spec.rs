@@ -1,11 +1,11 @@
 //! Emit package metadata as `nuspec` XML.
 
-use std::ops::Deref;
-use std::io::Error as IoError;
 use std::borrow::Cow;
+use std::io::Error as IoError;
+use std::ops::Deref;
 
-use super::Buf;
 use super::util::xml;
+use super::Buf;
 
 /// Nuget package dependency.
 #[derive(Debug, PartialEq)]
@@ -22,12 +22,10 @@ pub struct NugetDependencies<'a>(Vec<NugetDependency<'a>>);
 /// which is needed to resolve the right native binary at runtime.
 impl<'a> Default for NugetDependencies<'a> {
     fn default() -> Self {
-        NugetDependencies(vec![
-            NugetDependency {
-                id: "Microsoft.NETCore.Platforms".into(),
-                version: "[1.0.1, )".into(),
-            },
-        ])
+        NugetDependencies(vec![NugetDependency {
+            id: "Microsoft.NETCore.Platforms".into(),
+            version: "3.1.0".into(),
+        }])
     }
 }
 
@@ -105,7 +103,7 @@ fn format_dependencies<'a>(
     })
 }
 
-quick_error!{
+quick_error! {
     /// An error encountered formatting a Nuspec.
     #[derive(Debug)]
     pub enum NugetSpecError {
