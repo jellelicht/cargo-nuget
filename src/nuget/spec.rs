@@ -45,6 +45,8 @@ pub struct NugetSpecArgs<'a> {
     pub authors: Cow<'a, str>,
     pub description: Cow<'a, str>,
     pub dependencies: NugetDependencies<'a>,
+    pub homepage: Cow<'a, str>,
+    pub license: Cow<'a, str>,
 }
 
 /// A formatted nuspec file.
@@ -83,6 +85,8 @@ fn format_meta<'a>(args: &NugetSpecArgs<'a>, writer: &mut xml::Writer) -> Result
     xml::val(writer, "id", &args.id)?;
     xml::val(writer, "version", &args.version)?;
     xml::val(writer, "authors", &args.authors)?;
+    xml::val(writer, "homepage", &args.homepage)?;
+    xml::val(writer, "license", &args.license)?;
     xml::val(writer, "description", &args.description)
 }
 
@@ -132,6 +136,8 @@ mod tests {
             version: "0.1.0".into(),
             authors: "Someone".into(),
             description: "A description for this package".into(),
+            homepage: "somepage".into(),
+            license: "MIT".into(),
             dependencies: NugetDependencies(vec![
                 NugetDependency {
                     id: "A".into(),
@@ -154,6 +160,8 @@ mod tests {
                     <id>native</id>
                     <version>0.1.0</version>
                     <authors>Someone</authors>
+                    <homepage>somepage</homepage>
+                    <license>MIT</license>
                     <description>A description for this package</description>
                     <dependencies>
                         <dependency id="A" version="1.0.0" />

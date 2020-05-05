@@ -55,6 +55,8 @@ impl<'a> From<&'a CargoConfig> for NugetSpecArgs<'a> {
             version: Cow::Borrowed(&cargo.version),
             authors: Cow::Owned((&cargo.authors).join(", ")),
             description: Cow::Borrowed(&cargo.description),
+            homepage: Cow::Borrowed(&cargo.homepage),
+            license: Cow::Borrowed(&cargo.license),
             dependencies: NugetDependencies::default(),
         }
     }
