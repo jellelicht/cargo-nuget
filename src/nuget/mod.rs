@@ -1,24 +1,24 @@
 //! Commands for interacting with Nuget packages.
 
-mod spec;
 mod pack;
 mod save;
+mod spec;
 
 mod util;
 
-pub use self::spec::*;
 pub use self::pack::*;
 pub use self::save::*;
+pub use self::spec::*;
 
-use std::path::PathBuf;
-use std::fmt::{Debug, Error as FmtError, Formatter};
-use std::collections::HashMap;
-use std::borrow::Cow;
-use std::ops::Deref;
 use clap::ArgMatches;
+use std::borrow::Cow;
+use std::collections::HashMap;
+use std::fmt::{Debug, Error as FmtError, Formatter};
+use std::ops::Deref;
+use std::path::PathBuf;
 
-use cargo::{CargoBuildOutput, CargoConfig};
 use args::NUPKG_DIR_ARG;
+use cargo::{CargoBuildOutput, CargoConfig};
 
 /// A wrapper around an owned byte buffer.
 ///
@@ -55,7 +55,7 @@ impl<'a> From<&'a CargoConfig> for NugetSpecArgs<'a> {
             version: Cow::Borrowed(&cargo.version),
             authors: Cow::Owned((&cargo.authors).join(", ")),
             description: Cow::Borrowed(&cargo.description),
-            homepage: Cow::Borrowed(&cargo.homepage),
+            projectUrl: Cow::Borrowed(&cargo.homepage),
             license: Cow::Borrowed(&cargo.license),
             dependencies: NugetDependencies::default(),
         }

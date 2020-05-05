@@ -6,6 +6,8 @@ use std::ops::Deref;
 
 use super::util::xml;
 use super::Buf;
+use xml::attribute::Attribute;
+use xml::writer::XmlEvent;
 
 /// Nuget package dependency.
 #[derive(Debug, PartialEq)]
@@ -45,7 +47,7 @@ pub struct NugetSpecArgs<'a> {
     pub authors: Cow<'a, str>,
     pub description: Cow<'a, str>,
     pub dependencies: NugetDependencies<'a>,
-    pub homepage: Cow<'a, str>,
+    pub projectUrl: Cow<'a, str>,
     pub license: Cow<'a, str>,
 }
 
@@ -85,9 +87,22 @@ fn format_meta<'a>(args: &NugetSpecArgs<'a>, writer: &mut xml::Writer) -> Result
     xml::val(writer, "id", &args.id)?;
     xml::val(writer, "version", &args.version)?;
     xml::val(writer, "authors", &args.authors)?;
-    xml::val(writer, "homepage", &args.homepage)?;
-    xml::val(writer, "license", &args.license)?;
+    xml::val(writer, "projectUrl", &args.projectUrl)?;
+    format_license(args, writer);
     xml::val(writer, "description", &args.description)
+}
+
+// Write package license
+fn format_license<'a>(
+    args: &NugetSpecArgs<'a>,
+    writer: &mut xml::Writer,
+) -> Result<(), xml::Error> {
+    let license_attr = xml::attr("type", "expression");
+    let v = &args.license;
+    xml::elem(writer, "license", &[license_attr], |ref mut writer| {
+        writer.write(XmlEvent::Characters(v.as_ref()))?;
+        Ok(())
+    })
 }
 
 /// Write package dependencies.
@@ -136,7 +151,7 @@ mod tests {
             version: "0.1.0".into(),
             authors: "Someone".into(),
             description: "A description for this package".into(),
-            homepage: "somepage".into(),
+            projectUrl: "somepage".into(),
             license: "MIT".into(),
             dependencies: NugetDependencies(vec![
                 NugetDependency {
@@ -160,8 +175,8 @@ mod tests {
                     <id>native</id>
                     <version>0.1.0</version>
                     <authors>Someone</authors>
-                    <homepage>somepage</homepage>
-                    <license>MIT</license>
+                    <projectUrl>somepage</projectUrl>
+                    <license type="expression">MIT</license>
                     <description>A description for this package</description>
                     <dependencies>
                         <dependency id="A" version="1.0.0" />
