@@ -5,6 +5,8 @@ name = "native_test"
 version = "0.0.1"
 authors = ["Somebody", "Somebody Else"]
 description = "A library for testing cargo nuget"
+license = "GPL2+"
+homepage = "somepage"
 
 [lib]
 crate-type = ["cdylib"]

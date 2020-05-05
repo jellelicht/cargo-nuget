@@ -32,6 +32,8 @@ pub struct CargoConfig {
     pub version: String,
     pub authors: Vec<String>,
     pub description: String,
+    pub homepage: String,
+    pub license: String,
 }
 
 /// Parse `CargoConfig` from the given source.
@@ -62,6 +64,8 @@ fn parse_config_from_toml(toml: &BTreeMap<String, Value>) -> Result<CargoConfig,
     let name = toml_val!(pkg["name"].as_str())?.to_owned();
     let ver = toml_val!(pkg["version"].as_str())?.to_owned();
     let desc = toml_val!(pkg["description"].as_str())?.to_owned();
+    let homepage = toml_val!(pkg["homepage"].as_str())?.to_owned();
+    let license = toml_val!(pkg["license"].as_str())?.to_owned();
     let authors = toml_val!(pkg["authors"].as_slice())?
         .iter()
         .filter_map(|a| a.as_str())
@@ -73,6 +77,8 @@ fn parse_config_from_toml(toml: &BTreeMap<String, Value>) -> Result<CargoConfig,
         version: ver,
         authors: authors,
         description: desc,
+        homepage: homepage,
+        license: license,
     })
 }
 
@@ -170,7 +176,9 @@ mod tests {
             name = "native"
             version = "0.1.0"
             authors = ["Somebody", "Somebody Else"]
-            description = ""
+            description = "desc"
+            homepage = "https://some.page"
+            license = "MIT"
 
             [lib]
             crate-type = ["rlib", "dylib"]
@@ -188,7 +196,9 @@ mod tests {
             name: "native".into(),
             version: "0.1.0".into(),
             authors: vec!["Somebody".into(), "Somebody Else".into()],
-            description: "".into(),
+            description: "desc".into(),
+            homepage: "https://some.page".into(),
+            license: "MIT".into(),
         };
 
         assert_eq!(expected, toml);
@@ -215,6 +225,8 @@ mod tests {
             version = "0.1.0"
             authors = ["Somebody", "Somebody Else"]
             description = ""
+            homepage = ""
+            license = ""
 
             [lib]
             crate-type = ["rlib", "cdylib"]
